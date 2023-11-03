@@ -4,55 +4,74 @@
     <meta charset="UTF-8">
     <title>Conversor de Imagens para PNG</title>
     <style>
-        /* Estilos mantidos como no código original */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #F9EAF3; /* Fundo cor de marshmallow */
+            color: #555; /* Texto em cinza suave */
+            text-align: center;
+            padding: 50px;
+        }
+        h1 {
+            color: #FFC0CB; /* Rosa claro */
+        }
+        #imageFile {
+            border: 2px solid #FFC0CB;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 20px;
+        }
+        #downloadButton {
+            background-color: #FFC0CB; /* Rosa claro */
+            color: #FFF;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin: 20px;
+            text-decoration: none; /* Remove o sublinhado do link */
+            display: none; /* Inicialmente oculto */
+            cursor: pointer;
+        }
+        #downloadButton:hover {
+            background-color: #FFB6C1; /* Rosa um pouco mais escuro */
+        }
+        #output {
+            max-width: 100%;
+            height: auto;
+            margin-top: 20px;
+            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        /* Ocultar o canvas é uma boa prática para não interferir visualmente */
+        #canvas {
+            display: none;
+        }
     </style>
 </head>
 <body>
     <h1>Conversor de Imagens para PNG</h1>
-    <!-- Adicionado o atributo 'multiple' para permitir a seleção de várias imagens -->
-    <input type="file" id="imageFile" name="imageFile" accept="image/*" multiple>
-    <!-- O botão de download foi removido, pois agora teremos vários links de download -->
-    <div id="downloadLinks"></div>
+    <input type="file" id="imageFile" name="imageFile" accept="image/*">
+    <a id="downloadButton" href="#" download="convertido.png">Baixar imagem PNG</a>
     <canvas id="canvas"></canvas>
-    <!-- A tag img foi removida, pois agora teremos várias imagens -->
-    <div id="output"></div>
+    <img id="output" alt="Imagem Convertida" />
     <script>
         document.getElementById('imageFile').addEventListener('change', function(e) {
-            var files = e.target.files;
-            for (let i = 0; i < files.length; i++) {
-                var canvas = document.createElement('canvas');
-                var ctx = canvas.getContext('2d');
-                var img = new Image();
-                img.onload = function() {
-                    canvas.width = img.width;
-                    canvas.height = img.height;
-                    ctx.drawImage(img, 0, 0);
-                    var pngUrl = canvas.toDataURL('image/png');
-                    
-                    // Criar um novo elemento de imagem para cada arquivo
-                    var newImg = document.createElement('img');
-                    newImg.src = pngUrl;
-                    newImg.style.maxWidth = '100%';
-                    newImg.style.height = 'auto';
-                    newImg.style.marginTop = '20px';
-                    newImg.style.borderRadius = '5px';
-                    newImg.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
-                    document.getElementById('output').appendChild(newImg);
-                    
-                    // Criar um novo link de download para cada arquivo
-                    var downloadLink = document.createElement('a');
-                    downloadLink.href = pngUrl;
-                    downloadLink.download = 'convertido-' + i + '.png';
-                    downloadLink.textContent = 'Baixar imagem PNG ' + (i+1);
-                    downloadLink.style.display = 'block';
-                    downloadLink.style.margin = '10px';
-                    document.getElementById('downloadLinks').appendChild(downloadLink);
-                };
-                img.onerror = function() {
-                    alert('Ocorreu um erro ao carregar a imagem. Por favor, tente novamente com uma imagem diferente.');
-                };
-                img.src = URL.createObjectURL(files[i]);
+            var canvas = document.getElementById('canvas');
+            var ctx = canvas.getContext('2d');
+            var img = new Image();
+            img.onload = function() {
+                canvas.width = img.width;
+                canvas.height = img.height;
+                ctx.drawImage(img, 0, 0);
+                var pngUrl = canvas.toDataURL('image/png');
+                document.getElementById('output').src = pngUrl;
+                var downloadButton = document.getElementById('downloadButton');
+                downloadButton.href = pngUrl;
+                downloadButton.style.display = 'inline-block'; // Agora visível
             }
+            img.onerror = function() {
+                alert('Ocorreu um erro ao carregar a imagem. Por favor, tente novamente com uma imagem diferente.');
+            }
+            img.src = URL.createObjectURL(e.target.files[0]);
         });
     </script>
 </body>
