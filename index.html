@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Conversor de Imagens para PNG</title>
+</head>
+<body>
+    <h1>Conversor de Imagens para PNG</h1>
+    <input type="file" id="imageFile" name="imageFile" accept="image/*">
+    <button id="downloadButton" disabled>Baixar imagem PNG</button>
+    <canvas id="canvas" style="display:none;"></canvas>
+    <img id="output" />
+    <script>
+        document.getElementById('imageFile').addEventListener('change', function(e) {
+            var canvas = document.getElementById('canvas');
+            var ctx = canvas.getContext('2d');
+            var img = new Image();
+            img.onload = function() {
+                canvas.width = img.width;
+                canvas.height = img.height;
+                ctx.drawImage(img, 0, 0, img.width, img.height);
+                var pngUrl = canvas.toDataURL('image/png');
+                document.getElementById('output').src = pngUrl;
+                var downloadButton = document.getElementById('downloadButton');
+                downloadButton.href = pngUrl;
+                downloadButton.download = 'convertido.png';
+                downloadButton.disabled = false;
+            }
+            img.onerror = function() {
+                alert('Ocorreu um erro ao carregar a imagem. Por favor, tente novamente com uma imagem diferente.');
+            }
+            img.src = URL.createObjectURL(e.target.files[0]);
+        });
+    </script>
+</body>
+</html>
