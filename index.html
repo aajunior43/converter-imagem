@@ -1,14 +1,58 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
 <head>
+    <meta charset="UTF-8">
     <title>Conversor de Imagens para PNG</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #F9EAF3; /* Fundo cor de marshmallow */
+            color: #555; /* Texto em cinza suave */
+            text-align: center;
+            padding: 50px;
+        }
+        h1 {
+            color: #FFC0CB; /* Rosa claro */
+        }
+        #imageFile {
+            border: 2px solid #FFC0CB;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 20px;
+        }
+        #downloadButton {
+            background-color: #FFC0CB; /* Rosa claro */
+            color: #FFF;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin: 20px;
+            text-decoration: none; /* Remove o sublinhado do link */
+            display: none; /* Inicialmente oculto */
+            cursor: pointer;
+        }
+        #downloadButton:hover {
+            background-color: #FFB6C1; /* Rosa um pouco mais escuro */
+        }
+        #output {
+            max-width: 100%;
+            height: auto;
+            margin-top: 20px;
+            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        /* Ocultar o canvas é uma boa prática para não interferir visualmente */
+        #canvas {
+            display: none;
+        }
+    </style>
 </head>
 <body>
     <h1>Conversor de Imagens para PNG</h1>
     <input type="file" id="imageFile" name="imageFile" accept="image/*">
-    <button id="downloadButton" disabled>Baixar imagem PNG</button>
-    <canvas id="canvas" style="display:none;"></canvas>
-    <img id="output" />
+    <a id="downloadButton" href="#" download="convertido.png">Baixar imagem PNG</a>
+    <canvas id="canvas"></canvas>
+    <img id="output" alt="Imagem Convertida" />
     <script>
         document.getElementById('imageFile').addEventListener('change', function(e) {
             var canvas = document.getElementById('canvas');
@@ -17,13 +61,12 @@
             img.onload = function() {
                 canvas.width = img.width;
                 canvas.height = img.height;
-                ctx.drawImage(img, 0, 0, img.width, img.height);
+                ctx.drawImage(img, 0, 0);
                 var pngUrl = canvas.toDataURL('image/png');
                 document.getElementById('output').src = pngUrl;
                 var downloadButton = document.getElementById('downloadButton');
                 downloadButton.href = pngUrl;
-                downloadButton.download = 'convertido.png';
-                downloadButton.disabled = false;
+                downloadButton.style.display = 'inline-block'; // Agora visível
             }
             img.onerror = function() {
                 alert('Ocorreu um erro ao carregar a imagem. Por favor, tente novamente com uma imagem diferente.');
